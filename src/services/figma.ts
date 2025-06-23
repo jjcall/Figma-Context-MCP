@@ -152,8 +152,10 @@ export class FigmaService {
 
   async getFile(fileKey: string, depth?: number | null): Promise<SimplifiedDesign> {
     try {
-      const endpoint = `/files/${fileKey}${depth ? `?depth=${depth}` : ""}`;
-      Logger.log(`Retrieving Figma file: ${fileKey} (depth: ${depth ?? "default"})`);
+      // Default to maximum depth (50) if not specified to ensure complete node tree traversal
+      const effectiveDepth = depth ?? 50;
+      const endpoint = `/files/${fileKey}?depth=${effectiveDepth}`;
+      Logger.log(`Retrieving Figma file: ${fileKey} (depth: ${effectiveDepth}${depth ? "" : " [auto-max]"})`);
       const response = await this.request<GetFileResponse>(endpoint);
       Logger.log("Got response");
       const simplifiedResponse = parseFigmaResponse(response);
@@ -167,7 +169,10 @@ export class FigmaService {
   }
 
   async getNode(fileKey: string, nodeId: string, depth?: number | null): Promise<SimplifiedDesign> {
-    const endpoint = `/files/${fileKey}/nodes?ids=${nodeId}${depth ? `&depth=${depth}` : ""}`;
+    // Default to maximum depth (50) if not specified to ensure complete node tree traversal
+    const effectiveDepth = depth ?? 50;
+    const endpoint = `/files/${fileKey}/nodes?ids=${nodeId}&depth=${effectiveDepth}`;
+    Logger.log(`Retrieving Figma node: ${nodeId} from file: ${fileKey} (depth: ${effectiveDepth}${depth ? "" : " [auto-max]"})`);
     const response = await this.request<GetFileNodesResponse>(endpoint);
     Logger.log("Got response from getNode, now parsing.");
     writeLogs("figma-raw.yml", response);

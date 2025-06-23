@@ -54,7 +54,7 @@ function registerTools(
         .number()
         .optional()
         .describe(
-          "OPTIONAL. Do NOT use unless explicitly requested by the user. Controls how many levels deep to traverse the node tree,",
+          "OPTIONAL. Controls how many levels deep to traverse the node tree. If not specified, will fetch all available levels (maximum depth).",
         ),
     },
     async ({ fileKey, nodeId, depth }) => {

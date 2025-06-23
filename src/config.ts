@@ -8,11 +8,13 @@ interface ServerConfig {
   auth: FigmaAuthOptions;
   port: number;
   outputFormat: "yaml" | "json";
+  defaultDepth: number;
   configSources: {
     figmaApiKey: "cli" | "env";
     figmaOAuthToken: "cli" | "env" | "none";
     port: "cli" | "env" | "default";
     outputFormat: "cli" | "env" | "default";
+    defaultDepth: "cli" | "env" | "default";
     envFile: "cli" | "default";
   };
 }
@@ -84,11 +86,13 @@ export function getServerConfig(isStdioMode: boolean): ServerConfig {
   const config: Omit<ServerConfig, "auth"> = {
     port: 3333,
     outputFormat: "yaml",
+    defaultDepth: 50,
     configSources: {
       figmaApiKey: "env",
       figmaOAuthToken: "none",
       port: "default",
       outputFormat: "default",
+      defaultDepth: "default",
       envFile: envFileSource,
     },
   };
